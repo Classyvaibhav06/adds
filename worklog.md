@@ -48,3 +48,18 @@ Stage Summary:
 - Site confirmed error-free end-to-end (browser + server logs + DB)
 - Fixed: allowedDevOrigins warning, off-theme toast styling
 - Remaining known warning: `THREE.Clock deprecated` console notice from @react-three/fiber internals — harmless deprecation notice, requires library upgrade/patch to remove, does not affect behavior
+
+---
+Task ID: 4
+Agent: Z.ai Code (main)
+Task: Fix user-reported hydration mismatch error (Console Error: tree hydrated but some attributes of server rendered HTML didn't match client properties).
+
+Work Log:
+- Diagnosed error payload: mismatched attributes were `data-new-gr-c-s-check-loaded="14.1334.0"` and `data-gr-ext-installed=""` on `<body>` — these are injected by the Grammarly browser extension before React hydrates (exact case documented in the react.dev hydration-mismatch guide)
+- Fix: added `suppressHydrationWarning` to `<body>` in src/app/layout.tsx (html already had it). This suppresses attribute-mismatch warnings for that element only (one level deep), so it masks extension-injected attributes without hiding real subtree mismatches
+- Verified: `bun run lint` clean; page reloaded via agent-browser → zero page errors, zero hydration warnings in console; site renders correctly
+- Remaining console notice: `THREE.Clock deprecated` from @react-three/fiber internals — harmless, unchanged
+
+Stage Summary:
+- Root cause was user's browser extension (Grammarly), not app code
+- layout.tsx body now carries suppressHydrationWarning; site is resilient to Grammarly/password-manager/translator attribute injections

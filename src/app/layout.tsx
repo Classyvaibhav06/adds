@@ -49,6 +49,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        // Browser extensions (e.g. Grammarly) inject data-* attributes into
+        // <body> before React hydrates; this attribute tells React to ignore
+        // attribute mismatches on this element (one level deep only).
+        suppressHydrationWarning
         className={`${pixelFont.variable} ${bodyFont.variable} antialiased bg-[#0e0c14] text-white overflow-x-hidden`}
       >
         {children}
