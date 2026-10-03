@@ -1,5 +1,8 @@
 import { ScrollBridge } from "@/components/hud/ScrollBridge";
 import { Hud } from "@/components/hud/Hud";
+import { Hotbar } from "@/components/hud/Hotbar";
+import { DebugOverlay } from "@/components/hud/DebugOverlay";
+import { LiveFeed } from "@/components/hud/LiveFeed";
 import VoxelScene from "@/components/minecraft/VoxelScene";
 import {
   HeroSection,
@@ -16,6 +19,9 @@ export default function Page() {
       <ScrollBridge />
       <VoxelScene />
       <Hud />
+      <LiveFeed />
+      <Hotbar />
+      <DebugOverlay />
       <div className="relative z-10 pointer-events-none">
         <HeroSection />
         <AboutSection />

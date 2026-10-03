@@ -117,6 +117,43 @@ const skillIcons: Record<string, React.ComponentType<{ size?: number; style?: Re
   AWS: Cloud,
 };
 
+const SPLASHES = [
+  "Also try touching grass!",
+  "100% block-based!",
+  "Now with 20 TPS!",
+  "Punch that creeper!",
+  "Backend powered!",
+  "Async/await!",
+  "Zero downtime!",
+  "Creeper approved!",
+  "As seen in the Nether!",
+  "Made with Java(script)!",
+  "Press F3!",
+  "Try the hotbar!",
+  "60 FPS or bust!",
+  "Sniff sniff… smells like p99!",
+];
+
+/** Yellow angled splash text next to the title, like the Minecraft menu. */
+function Splash() {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    setText(SPLASHES[Math.floor(Math.random() * SPLASHES.length)]);
+  }, []);
+  if (!text) return null;
+  return (
+    <motion.span
+      className="absolute -right-4 top-2 sm:right-[-4.5rem] sm:top-6 origin-center block font-mc text-lg sm:text-2xl text-[#ffff55] [text-shadow:2px_2px_0_rgba(0,0,0,0.8)] select-none pointer-events-none"
+      style={{ rotate: -14 }}
+      animate={{ scale: [1, 1.09, 1] }}
+      transition={{ repeat: Infinity, duration: 0.9, ease: "easeInOut" }}
+      aria-hidden="true"
+    >
+      {text}
+    </motion.span>
+  );
+}
+
 /* ---------------- 0. HERO ---------------- */
 
 export function HeroSection() {
@@ -126,13 +163,16 @@ export function HeroSection() {
         <div className="mc-panel px-4 py-2 mb-8 pointer-events-auto">
           <span className="font-pixel text-[9px] text-[#7fff4f]">{"// SERVER-SIDE SPECIALIST"}</span>
         </div>
-        <h1
-          className="font-pixel text-shadow-pixel-lg leading-[1.15]"
-          style={{ fontSize: "clamp(1.9rem, 8vw, 5rem)" }}
-        >
-          BLOCK<span className="text-[#7fff4f]">SMITH</span>
-          <span className="blink-caret text-[#7fff4f]">_</span>
-        </h1>
+        <div className="relative">
+          <h1
+            className="font-pixel text-shadow-pixel-lg leading-[1.15]"
+            style={{ fontSize: "clamp(1.9rem, 8vw, 5rem)" }}
+          >
+            BLOCK<span className="text-[#7fff4f]">SMITH</span>
+            <span className="blink-caret text-[#7fff4f]">_</span>
+          </h1>
+          <Splash />
+        </div>
         <p className="font-mc text-2xl sm:text-3xl text-white/90 mt-6 max-w-2xl text-shadow-mc">
           Backend developer crafting APIs, databases &amp; real-time systems —{" "}
           <span className="text-[#ffd76e]">one block at a time.</span>

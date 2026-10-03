@@ -7,6 +7,8 @@ import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Sparkles } from "@react-three/drei";
 import { scrollStore } from "@/lib/scrollStore";
+import { PUNCH_PROFILES } from "@/lib/items";
+import { playBoom, playDing, playPop, playSparkle, playSplash, playTeleport, type SfxName } from "@/lib/sfx";
 import { FloatingIsland, CrystalCave, EnchantGrove, LootVault, ServerRoom, PortalRealm } from "./clusters";
 import { XpOrb } from "./blocks";
 
@@ -114,8 +116,37 @@ function Atmosphere() {
   return null;
 }
 
+/* ---------------- sun (kept bright beyond the fog) ---------------- */
+function Sun() {
+  return (
+    <mesh position={[21, 27, -32]} rotation={[0, -0.5, 0.12]}>
+      <boxGeometry args={[3.2, 3.2, 3.2]} />
+      <meshBasicMaterial color="#fff3c4" fog={false} />
+    </mesh>
+  );
+}
+
 /* ---------------- click-to-punch particles ---------------- */
 const PARTICLE_COUNT = 72;
+
+const SFX: Record<SfxName, () => void> = {
+  pop: playPop,
+  boom: playBoom,
+  ding: playDing,
+  sparkle: playSparkle,
+  splash: playSplash,
+  teleport: playTeleport,
+};
+
+const matCache = new Map<string, THREE.MeshBasicMaterial[]>();
+function paletteMats(palette: string[]): THREE.MeshBasicMaterial[] {
+  const key = palette.join("|");
+  const hit = matCache.get(key);
+  if (hit) return hit;
+  const mats = palette.map((c) => new THREE.MeshBasicMaterial({ color: c }));
+  matCache.set(key, mats);
+  return mats;
+}
 
 function PunchParticles({ terrainRef }: { terrainRef: React.RefObject<THREE.Group | null> }) {
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
@@ -131,13 +162,6 @@ function PunchParticles({ terrainRef }: { terrainRef: React.RefObject<THREE.Grou
       base: 1,
     }))
   );
-  const palette = useMemo(
-    () =>
-      ["#8a5f38", "#8a8a8a", "#6faf3e", "#4aedd9", "#fcee4b", "#a86fe8"].map(
-        (c) => new THREE.MeshBasicMaterial({ color: c })
-      ),
-    []
-  );
 
   useEffect(() => {
     const ndc = new THREE.Vector2();
@@ -146,6 +170,9 @@ function PunchParticles({ terrainRef }: { terrainRef: React.RefObject<THREE.Grou
 
     const onDown = (e: PointerEvent) => {
       if (e.target !== gl.domElement) return;
+      const prof = PUNCH_PROFILES[scrollStore.selectedItem] ?? PUNCH_PROFILES.pickaxe;
+      const mats = paletteMats(prof.palette);
+
       ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
       raycaster.setFromCamera(ndc, camera);
 
@@ -156,9 +183,10 @@ function PunchParticles({ terrainRef }: { terrainRef: React.RefObject<THREE.Grou
       }
       if (!point) point = raycaster.ray.at(20, fallback);
 
-      scrollStore.shake = 0.4;
+      scrollStore.shake = Math.max(scrollStore.shake, prof.shake);
+      SFX[prof.sfx]?.();
       const pool = poolRef.current;
-      for (let k = 0; k < 10; k++) {
+      for (let k = 0; k < prof.count; k++) {
         const idx = cursor.current % PARTICLE_COUNT;
         cursor.current++;
         const mesh = meshRefs.current[idx];
@@ -177,14 +205,14 @@ function PunchParticles({ terrainRef }: { terrainRef: React.RefObject<THREE.Grou
             )
           );
         mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
-        mesh.material = palette[Math.floor(Math.random() * palette.length)];
+        mesh.material = mats[Math.floor(Math.random() * mats.length)];
         mesh.scale.setScalar(p.base);
       }
     };
 
     window.addEventListener("pointerdown", onDown);
     return () => window.removeEventListener("pointerdown", onDown);
-  }, [camera, gl, raycaster, terrainRef, palette]);
+  }, [camera, gl, raycaster, terrainRef]);
 
   useFrame((_, dt) => {
     const pool = poolRef.current;
@@ -259,6 +287,7 @@ export default function VoxelScene() {
       >
         <CameraRig />
         <Atmosphere />
+        <Sun />
         <fog attach="fog" args={[FOG_STOPS[0].getHex(), 9, 42]} />
         <color attach="background" args={[FOG_STOPS[0].getHex()]} />
         <ambientLight intensity={0.35} />

@@ -9,6 +9,8 @@ export const scrollStore = {
   shake: 0,
   /** Measured offsetTop of each scene section (index 0..N-1) */
   offsets: [] as number[],
+  /** Currently selected hotbar item id (changes the punch effect) */
+  selectedItem: "pickaxe",
 };
 
 /** Total number of scroll sections (drives camera keyframe mapping). */

@@ -326,6 +326,113 @@ const painters: Record<string, (ctx: CanvasRenderingContext2D, rng: Rng) => void
     for (let i = 0; i < 7; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#b48ae8");
     for (let i = 0; i < 5; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#5c3a8a");
   },
+  /* ---- mobs ---- */
+  creeper_skin: (ctx, rng) => {
+    noiseFill(ctx, rng, "#4faf4f", 0.28);
+    for (let i = 0; i < 12; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 2, "#2f7a2f");
+    for (let i = 0; i < 8; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#7fd47f");
+  },
+  creeper_face: (ctx, rng) => {
+    painters.creeper_skin(ctx, rng);
+    const black = "#101410";
+    px(ctx, 3, 4, 2, 2, black); // eyes
+    px(ctx, 11, 4, 2, 2, black);
+    px(ctx, 6, 7, 4, 3, black); // mouth
+    px(ctx, 5, 9, 1, 3, black);
+    px(ctx, 10, 9, 1, 3, black);
+  },
+  pig_skin: (ctx, rng) => {
+    noiseFill(ctx, rng, "#eda3a3", 0.12);
+    for (let i = 0; i < 6; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#d88787");
+  },
+  pig_face: (ctx, rng) => {
+    painters.pig_skin(ctx, rng);
+    px(ctx, 3, 5, 1, 2, "#ffffff"); // eyes
+    px(ctx, 4, 5, 1, 2, "#1a1a2a");
+    px(ctx, 11, 5, 1, 2, "#1a1a2a");
+    px(ctx, 12, 5, 1, 2, "#ffffff");
+    px(ctx, 5, 8, 6, 4, "#f2b5b5"); // snout
+    px(ctx, 5, 8, 6, 1, "#d88787");
+    px(ctx, 6, 10, 1, 1, "#7a3a3a"); // nostrils
+    px(ctx, 9, 10, 1, 1, "#7a3a3a");
+  },
+  enderman_skin: (ctx, rng) => {
+    noiseFill(ctx, rng, "#101014", 0.5);
+  },
+  enderman_face: (ctx, rng) => {
+    painters.enderman_skin(ctx, rng);
+    px(ctx, 2, 5, 5, 2, "#d57bff"); // glowing eyes
+    px(ctx, 9, 5, 5, 2, "#d57bff");
+    px(ctx, 3, 6, 2, 1, "#8a3fc4");
+    px(ctx, 10, 6, 2, 1, "#8a3fc4");
+  },
+  end_stone: (ctx, rng) => {
+    noiseFill(ctx, rng, "#dde0a0", 0.1);
+    for (let i = 0; i < 8; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#c2c688");
+    for (let i = 0; i < 5; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#f0f2c0");
+  },
+  /* ---- tnt ---- */
+  tnt_side: (ctx, rng) => {
+    noiseFill(ctx, rng, "#c73a3a", 0.12);
+    px(ctx, 0, 0, SIZE, 1, "#7a1f1f");
+    px(ctx, 0, 15, SIZE, 1, "#7a1f1f");
+    px(ctx, 0, 6, SIZE, 5, "#e8e0d0"); // white band
+    px(ctx, 0, 6, SIZE, 1, "#b8b0a0");
+    // TNT letters
+    px(ctx, 2, 7, 3, 1, "#1a1a1a");
+    px(ctx, 3, 8, 1, 2, "#1a1a1a");
+    px(ctx, 6, 7, 1, 3, "#1a1a1a");
+    px(ctx, 9, 7, 1, 3, "#1a1a1a");
+    px(ctx, 8, 8, 1, 1, "#1a1a1a");
+    px(ctx, 11, 7, 3, 1, "#1a1a1a");
+    px(ctx, 12, 8, 1, 2, "#1a1a1a");
+  },
+  tnt_top: (ctx, rng) => {
+    noiseFill(ctx, rng, "#c73a3a", 0.1);
+    px(ctx, 4, 4, 8, 8, "#d8cfc0");
+    px(ctx, 4, 4, 8, 1, "#b8b0a0");
+    px(ctx, 7, 7, 2, 2, "#1a1a1a");
+  },
+  /* ---- environment ---- */
+  waterfall: (ctx, rng) => {
+    noiseFill(ctx, rng, "#3f76e4", 0.14);
+    for (let i = 0; i < 6; i++) {
+      const x = Math.floor(rng() * 16);
+      const y = Math.floor(rng() * 8);
+      px(ctx, x, y, 1, 16 - y, "#9bd4ff");
+    }
+    for (let i = 0; i < 4; i++) {
+      const x = Math.floor(rng() * 16);
+      px(ctx, x, Math.floor(rng() * 6), 1, 10 + Math.floor(rng() * 6), "#2a56c4");
+    }
+    for (let i = 0; i < 5; i++) px(ctx, Math.floor(rng() * 16), Math.floor(rng() * 16), 1, 1, "#ffffff");
+  },
+  flower_red: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    px(ctx, 7, 8, 1, 8, "#3e7a24"); // stem
+    px(ctx, 5, 11, 2, 1, "#3e7a24"); // leaves
+    px(ctx, 8, 12, 2, 1, "#3e7a24");
+    px(ctx, 6, 3, 3, 5, "#d8342c"); // petals
+    px(ctx, 5, 4, 5, 3, "#d8342c");
+    px(ctx, 7, 4, 1, 2, "#1a1a1a"); // center
+  },
+  flower_yellow: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    px(ctx, 7, 8, 1, 8, "#3e7a24");
+    px(ctx, 6, 10, 1, 1, "#3e7a24");
+    px(ctx, 6, 3, 4, 4, "#f8d33e");
+    px(ctx, 7, 4, 2, 2, "#ffef9e");
+    px(ctx, 5, 4, 1, 2, "#f8d33e");
+    px(ctx, 10, 4, 1, 2, "#f8d33e");
+  },
+  tall_grass: (ctx, rng) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let i = 0; i < 7; i++) {
+      const x = 2 + Math.floor(rng() * 12);
+      const h = 5 + Math.floor(rng() * 7);
+      px(ctx, x, SIZE - h, 1, h, pick(rng, ["#4c8a2a", "#5fa334", "#6faf3e"]));
+    }
+  },
 };
 
 export type TextureId = keyof typeof painters;
@@ -374,7 +481,15 @@ export type BlockType =
   | "command_block"
   | "enchant_table"
   | "redstone_lamp"
-  | "amethyst";
+  | "amethyst"
+  | "tnt"
+  | "creeper_skin"
+  | "creeper_head"
+  | "pig_skin"
+  | "pig_head"
+  | "enderman_skin"
+  | "enderman_head"
+  | "end_stone";
 
 const materialCache = new Map<string, THREE.Material | THREE.Material[]>();
 
@@ -468,6 +583,46 @@ export function getBlockMaterials(type: BlockType): THREE.Material | THREE.Mater
     case "redstone_lamp":
       mat = lambert("redstone_lamp", "#ff9b3d", 0.0);
       break;
+    case "creeper_head":
+      mat = [
+        lambert("creeper_skin"),
+        lambert("creeper_skin"),
+        lambert("creeper_skin"),
+        lambert("creeper_skin"),
+        lambert("creeper_face"),
+        lambert("creeper_skin"),
+      ];
+      break;
+    case "pig_head":
+      mat = [
+        lambert("pig_skin"),
+        lambert("pig_skin"),
+        lambert("pig_skin"),
+        lambert("pig_skin"),
+        lambert("pig_face"),
+        lambert("pig_skin"),
+      ];
+      break;
+    case "enderman_head":
+      mat = [
+        lambert("enderman_skin"),
+        lambert("enderman_skin"),
+        lambert("enderman_skin"),
+        lambert("enderman_skin"),
+        lambert("enderman_face"),
+        lambert("enderman_skin"),
+      ];
+      break;
+    case "tnt":
+      mat = [
+        lambert("tnt_side"),
+        lambert("tnt_side"),
+        lambert("tnt_top"),
+        lambert("tnt_top"),
+        lambert("tnt_side"),
+        lambert("tnt_side"),
+      ];
+      break;
     case "planks":
       mat = lambert("oak_planks");
       break;
@@ -483,4 +638,109 @@ let boxGeo: THREE.BoxGeometry | null = null;
 export function getBoxGeometry(): THREE.BoxGeometry {
   if (!boxGeo) boxGeo = new THREE.BoxGeometry(1, 1, 1);
   return boxGeo;
+}
+
+/** Access a cached texture directly (e.g. to clone for animated offsets). */
+export function getRawTexture(id: string): THREE.CanvasTexture {
+  return getTexture(id);
+}
+
+/* ============ 16x16 item icons for the HUD hotbar (painted → data URL) ============ */
+
+const iconPainters: Record<string, (ctx: CanvasRenderingContext2D, rng: Rng) => void> = {
+  pickaxe: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let i = 0; i < 7; i++) px(ctx, 4 + i, 10 - i, 2, 2, "#8a5f38"); // handle
+    const head: [number, number][] = [
+      [4, 4], [5, 3], [6, 2], [7, 2], [8, 2], [9, 2], [10, 3], [11, 4], [12, 5],
+    ];
+    for (const [x, y] of head) px(ctx, x, y, 2, 2, "#9a9a9a");
+    for (const [x, y] of head) px(ctx, x, y + 2, 2, 1, "#6d6d6d");
+  },
+  sword: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let i = 0; i < 8; i++) px(ctx, 11 - i, 2 + i, 2, 2, "#4aedd9"); // blade
+    for (let i = 0; i < 8; i++) px(ctx, 12 - i, 2 + i, 1, 1, "#c8fff8"); // edge shine
+    px(ctx, 3, 9, 4, 1, "#2a5a54"); // guard
+    px(ctx, 5, 9, 1, 1, "#2a5a54");
+    px(ctx, 3, 10, 1, 1, "#2a5a54");
+    for (let i = 0; i < 3; i++) px(ctx, 2 + i, 10 + i, 2, 2, "#6e5630"); // handle
+  },
+  torch: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    px(ctx, 7, 6, 2, 9, "#6e5630"); // stick
+    px(ctx, 6, 2, 4, 4, "#ffd97d"); // flame
+    px(ctx, 7, 3, 2, 2, "#fff2b0");
+    px(ctx, 6, 5, 4, 1, "#ff7b2f");
+  },
+  tnt: (ctx, rng) => {
+    painters.tnt_side(ctx, rng);
+  },
+  bucket: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let i = 0; i < 4; i++) px(ctx, 3, 3 + i, 1, 1, "#9a9a9a"); // handle
+    for (let i = 0; i < 4; i++) px(ctx, 12, 3 + i, 1, 1, "#9a9a9a");
+    px(ctx, 3, 3, 10, 1, "#9a9a9a");
+    px(ctx, 4, 6, 9, 2, "#3f76e4"); // water
+    for (let i = 0; i < 6; i++) px(ctx, 4 + i, 8 + i, 9 - i * 2, 1, "#8a8a8a");
+    for (let i = 0; i < 6; i++) px(ctx, 4, 8 + i, 9 - i * 2, 1, "#b8b8b8");
+    px(ctx, 4, 13, 9, 1, "#6d6d6d");
+  },
+  pearl: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        const d = Math.hypot(x - 7.5, y - 7.5);
+        if (d < 6) px(ctx, x, y, 1, 1, d < 5 ? "#0f4f45" : "#083a34");
+      }
+    }
+    px(ctx, 5, 5, 3, 2, "#3fe0c8");
+    px(ctx, 9, 9, 2, 2, "#1a7a6a");
+  },
+  gapple: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        const d = Math.hypot(x - 7.5, y - 9);
+        if (d < 5.5) px(ctx, x, y, 1, 1, d < 4.5 ? "#f8d33e" : "#c9a52c");
+      }
+    }
+    px(ctx, 7, 2, 2, 2, "#6e5630"); // stem
+    px(ctx, 9, 3, 3, 2, "#4c8a2a"); // leaf
+    px(ctx, 5, 6, 2, 2, "#ffef9e"); // shine
+  },
+  diamond: (ctx) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        const dx = Math.abs(x - 7.5);
+        const dy = Math.abs(y - 7.5);
+        if (dx + dy < 6) px(ctx, x, y, 1, 1, dx + dy < 5 ? "#4aedd9" : "#2aa79b");
+      }
+    }
+    px(ctx, 5, 4, 3, 2, "#d4fff8");
+    px(ctx, 8, 8, 2, 2, "#8af0e4");
+  },
+  book: (ctx, rng) => {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    px(ctx, 3, 3, 10, 11, "#7a3fc4");
+    px(ctx, 3, 3, 2, 11, "#5c2f96"); // spine
+    px(ctx, 12, 4, 1, 9, "#e8dcc0"); // pages
+    px(ctx, 5, 5, 3, 1, "#b48ae8");
+    px(ctx, 9, 7, 2, 1, "#e8d9ff");
+    for (let i = 0; i < 4; i++) px(ctx, 4 + Math.floor(rng() * 8), 8 + Math.floor(rng() * 5), 1, 1, "#d9a7ff");
+  },
+};
+
+const iconCache = new Map<string, string>();
+
+/** Painted 16x16 pixel item icon as a data URL (for the HUD hotbar). */
+export function getItemIcon(id: string): string {
+  const hit = iconCache.get(id);
+  if (hit) return hit;
+  const painter = iconPainters[id];
+  if (!painter) throw new Error(`Unknown item icon: ${id}`);
+  const url = paint(`icon-${id}`, painter).toDataURL();
+  iconCache.set(id, url);
+  return url;
 }

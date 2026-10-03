@@ -1,18 +1,10 @@
 "use client";
 // Fixed Minecraft-style HUD: hearts, XP progress bar (= scroll depth),
-// live coordinates and the current biome name.
+// live coordinates, the current biome name and an F3 debug toggle.
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import { scrollStore } from "@/lib/scrollStore";
-
-const BIOMES = [
-  "The Overworld",
-  "Lush Cave",
-  "Enchanting Grove",
-  "Treasure Vault",
-  "Redstone Bunker",
-  "Portal Realm",
-];
+import { BIOMES } from "@/lib/biomes";
 
 export function Hud() {
   const [seg, setSeg] = useState(0);
@@ -48,6 +40,14 @@ export function Hud() {
               BlockSmith
             </span>
             <span className="font-pixel text-[8px] text-[#7fff4f] text-shadow-mc">Lv.32</span>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("mc:f3"))}
+              className="pointer-events-auto ml-1 font-pixel text-[7px] text-white/70 hover:text-[#7fff4f] border-2 border-white/20 hover:border-[#7fff4f] px-1 py-0.5"
+              aria-label="Toggle debug overlay (F3)"
+            >
+              F3
+            </button>
           </div>
           <div className="mt-1.5 flex items-center gap-2">
             <div className="w-32 sm:w-44 h-3 bg-black/80 border-2 border-black overflow-hidden">

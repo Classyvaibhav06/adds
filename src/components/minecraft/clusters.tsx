@@ -5,6 +5,8 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import { Float } from "@react-three/drei";
 import { Block, OrbitingBook, PortalSurface, RedstoneLamp, ServerRack, XpOrb } from "./blocks";
+import { Bat, Chicken, Creeper, EnderDragon, Enderman, Pig } from "./mobs";
+import { BeaconBeam, FlowerPatch, MonitorGraph, RuneRing, Torch, TntBlock, Waterfall } from "./decor";
 import type { BlockType } from "@/lib/textures";
 
 function rng(seed: number) {
@@ -75,6 +77,36 @@ export function FloatingIsland() {
       ].map(([x, y, z], i) => (
         <Block key={`l${i}`} type="leaves" position={[x, y, z]} />
       ))}
+
+      {/* Second oak tree, smaller */}
+      {[1, 2].map((y) => (
+        <Block key={`t2-${y}`} type="log" position={[-4, y, -4]} />
+      ))}
+      {[
+        [-5, 3, -4],
+        [-4, 3, -4],
+        [-3, 3, -4],
+        [-4, 3, -5],
+        [-4, 3, -3],
+        [-4, 4, -4],
+      ].map(([x, y, z], i) => (
+        <Block key={`l2-${i}`} type="leaves" position={[x, y, z]} />
+      ))}
+
+      {/* Flowers & tall grass */}
+      <FlowerPatch cx={0} cz={0} spread={4.6} />
+
+      {/* Passive mobs */}
+      <Creeper position={[-2.5, 0.5, 2.5]} />
+      <Pig position={[3.5, 0.5, 3]} />
+      <Pig position={[-3.5, 0.5, -1.5]} />
+      <Chicken position={[0.5, 0.5, -3.5]} />
+
+      {/* Clickable TNT near the front edge */}
+      <TntBlock position={[1, 0.5, 4]} />
+
+      {/* Waterfall off the western edge */}
+      <Waterfall position={[-5.9, -4.75, 2.5]} height={9} width={1.4} rotationY={Math.PI / 2} />
 
       {/* Satellite mini islands */}
       {[
@@ -236,6 +268,48 @@ export function CrystalCave() {
       <XpOrb position={[2.8, -17.5, -0.8]} color="#7fff4f" phase={2.2} />
       <XpOrb position={[0, -16.6, -3]} color="#7be0ff" phase={4.1} />
 
+      {/* Cave bats */}
+      <Bat center={[0, 0, 0]} radius={3} height={-16.4} speed={0.5} phase={0} />
+      <Bat center={[1, 0, -1]} radius={2.2} height={-17.2} speed={0.7} phase={2.4} />
+      <Bat center={[-2, 0, 1]} radius={2.6} height={-16.8} speed={0.6} phase={4.4} />
+
+      {/* Wall torches */}
+      <Torch position={[4.45, -17.7, -3]} rotationY={-Math.PI / 2} />
+      <Torch position={[-4.45, -17.7, 3]} rotationY={Math.PI / 2} />
+
+      {/* Minecart rails + cart */}
+      <group>
+        {[-1.62, -1.38].map((z, i) => (
+          <mesh key={i} position={[0, -18.44, z]}>
+            <boxGeometry args={[11, 0.05, 0.08]} />
+            <meshLambertMaterial color="#9a9a9a" />
+          </mesh>
+        ))}
+        {Array.from({ length: 9 }, (_, i) => (
+          <mesh key={`s${i}`} position={[-4.5 + i * 1.15, -18.47, -1.5]}>
+            <boxGeometry args={[0.3, 0.05, 0.7]} />
+            <meshLambertMaterial color="#6e5630" />
+          </mesh>
+        ))}
+        {/* minecart */}
+        <group position={[1.8, -18.25, -1.5]}>
+          <mesh>
+            <boxGeometry args={[0.72, 0.3, 0.72]} />
+            <meshLambertMaterial color="#5a5a5a" />
+          </mesh>
+          <mesh position={[0, 0.2, 0]}>
+            <boxGeometry args={[0.6, 0.12, 0.6]} />
+            <meshLambertMaterial color="#3a3a3a" />
+          </mesh>
+        </group>
+      </group>
+
+      {/* Still water pool */}
+      <mesh position={[-2.9, -18.43, 2.9]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[2.4, 2.4]} />
+        <meshBasicMaterial color="#3f76e4" transparent opacity={0.72} />
+      </mesh>
+
       <pointLight position={[0, -15, 0]} intensity={26} distance={22} color="#9adfff" />
       <pointLight position={[-4, -16, -4]} intensity={10} distance={12} color="#ffd97d" />
     </group>
@@ -304,6 +378,9 @@ export function EnchantGrove() {
 
       <XpOrb position={[cx + 2.6, -32.4, cz + 1]} color="#d9a7ff" phase={1} />
       <XpOrb position={[cx - 2.2, -32, cz - 1.6]} color="#d9a7ff" phase={3.4} />
+
+      {/* Orbiting rune ring */}
+      <RuneRing center={[cx, cz]} radius={2.7} height={-31.4} speed={0.45} />
 
       <pointLight position={[cx, -30.5, cz + 2]} intensity={24} distance={20} color="#c99aff" />
       <pointLight position={[cx - 3, -33, cz - 3]} intensity={8} distance={10} color="#ffd97d" />
@@ -393,6 +470,18 @@ export function LootVault() {
 
       <pointLight position={[cx, -45.5, cz + 3]} intensity={26} distance={24} color="#ffd9a0" />
       <pointLight position={[cx, -47.5, cz]} intensity={10} distance={12} color="#7be0ff" />
+
+      {/* Beacon beam shooting to the sky */}
+      <BeaconBeam position={[cx, -17.2, cz]} />
+
+      {/* Gold piles in the corners */}
+      <Block type="gold_block" position={[cx - 3.4, -49.5, cz + 3.4]} />
+      <Block type="gold_block" position={[cx - 3.4, -49.5, cz + 2.4]} />
+      <Block type="gold_block" position={[cx + 3.4, -49.5, cz - 3.4]} />
+      <Block type="gold_block" position={[cx + 2.4, -49.5, cz - 3.4]} />
+
+      {/* Clickable TNT in the loot */}
+      <TntBlock position={[cx - 3.2, -49.45, cz - 1.2]} />
     </group>
   );
 }
@@ -477,6 +566,14 @@ export function ServerRoom() {
       <XpOrb position={[-2, -62, 2]} color="#3dff6e" phase={0.4} />
       <XpOrb position={[3, -62.6, 0]} color="#3dff6e" phase={2.8} />
 
+      {/* Wall torches */}
+      <Torch position={[-4.45, -64.2, -3.8]} rotationY={Math.PI / 2} />
+      <Torch position={[4.45, -64.2, -3.8]} rotationY={-Math.PI / 2} />
+
+      {/* Fake load-graph monitors on the back wall */}
+      <MonitorGraph position={[-2.2, -63.6, -4.85]} />
+      <MonitorGraph position={[0.4, -63.6, -4.85]} />
+
       <pointLight position={[0, -61.5, 2]} intensity={22} distance={24} color="#cfe8ff" />
       <pointLight position={[0, -63, -2]} intensity={9} distance={14} color="#3dff6e" />
     </group>
@@ -542,6 +639,34 @@ export function PortalRealm() {
 
       <XpOrb position={[cx - 2.4, -78.4, 2.2]} color="#d9a7ff" phase={0.9} />
       <XpOrb position={[cx + 2.2, -79.2, 2.6]} color="#e0b0ff" phase={2.6} />
+
+      {/* THE ENDER DRAGON circles the portal */}
+      <EnderDragon center={[cx, 0]} orbitRadius={7.5} height={-75.5} speed={0.3} />
+
+      {/* Endermen teleporting around the realm */}
+      <Enderman position={[cx + 3.4, -81.5, 3.2]} radius={2} />
+      <Enderman position={[cx - 4, -81.5, -2.6]} radius={1.8} />
+
+      {/* Torch by the portal */}
+      <Torch position={[cx + 1.8, -80.4, 1.9]} intensity={4} />
+
+      {/* Floating end-stone islands */}
+      <Float speed={1.1} floatIntensity={0.9} rotationIntensity={0.1}>
+        <group position={[cx + 6.2, -74.6, -4.2]}>
+          <Block type="end_stone" position={[0, 0, 0]} />
+          <Block type="end_stone" position={[1, 0, 0]} />
+          <Block type="end_stone" position={[0, 0, 1]} />
+          <Block type="end_stone" position={[0, -1, 0]} />
+        </group>
+      </Float>
+      <Float speed={1.5} floatIntensity={1.3} rotationIntensity={0.15}>
+        <group position={[cx - 6.8, -73.4, 3.4]}>
+          <Block type="end_stone" position={[0, 0, 0]} />
+          <Block type="end_stone" position={[-1, 0, 0]} />
+          <Block type="end_stone" position={[0, -1, 0]} />
+          <Block type="end_stone" position={[0, -1, 1]} />
+        </group>
+      </Float>
 
       <pointLight position={[cx, -78.5, 3]} intensity={30} distance={22} color="#c26fff" />
       <pointLight position={[cx, -80, -2]} intensity={14} distance={14} color="#8a3fd9" />
