@@ -27,3 +27,24 @@ Stage Summary:
 - Key files: src/lib/{textures,profile,scrollStore}.ts, src/components/minecraft/*, src/components/hud/*, src/components/sections/sections.tsx, src/app/api/contact/route.ts
 - Profile content is centralized in src/lib/profile.ts for easy customization
 - Contact messages persist to db/custom.db (Prisma Message model)
+
+---
+Task ID: 3
+Agent: Z.ai Code (main)
+Task: Investigate user-reported errors ("ig some errroe are there") on the Minecraft 3D scroll portfolio and fix everything fixable.
+
+Work Log:
+- Full audit: read all source files (VoxelScene, blocks, clusters, sections, Hud, ScrollBridge, textures, scrollStore, profile, contact route, prisma schema, globals.css, layout, next.config)
+- `bun run lint` → clean, zero findings
+- Agent-browser E2E verification: fresh load, all 6 sections screenshotted at 1440x900 and 390x844, full scroll journey (scrollY 0→4500), HUD biome/XP updates confirmed, Next.js dev-tools overlay opened (no issue badges)
+- Tested golden path via UI: filled contact form, clicked THROW INTO PORTAL → toast appeared, `POST /api/contact 201`, prisma INSERT row confirmed in dev.log
+- Click-to-punch interaction wired (pointerdown → raycast → particle pool + camera shake)
+- Findings: NO runtime/page errors. Only (a) `THREE.Clock` deprecation warning — emitted by three.js internals inside @react-three/fiber, harmless, unfixable without patching node_modules; (b) dev-only "Cross origin request detected" warning in dev.log from preview sandbox origin; (c) stale EADDRINUSE in old dev.log from a duplicate server start (not a code issue); (d) default white shadcn toast clashed with Minecraft theme (looked "broken")
+- Fixed next.config.ts: added `allowedDevOrigins: ["*.space-z.ai"]` → server auto-restarted, cross-origin warning gone
+- Fixed src/components/ui/toast.tsx: themed default+destructive variants as dark mc-panel style (chunky black border, pixel-bevel shadows), pixel-font gold title with text-shadow, VT323 body, themed close button
+- Re-verified: lint clean, dev.log clean (no cross-origin warning), fresh reload console has zero errors, full scroll journey + form submission + themed toast confirmed via screenshots
+
+Stage Summary:
+- Site confirmed error-free end-to-end (browser + server logs + DB)
+- Fixed: allowedDevOrigins warning, off-theme toast styling
+- Remaining known warning: `THREE.Clock deprecated` console notice from @react-three/fiber internals — harmless deprecation notice, requires library upgrade/patch to remove, does not affect behavior

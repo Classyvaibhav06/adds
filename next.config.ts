@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  // Silence the dev-only cross-origin warning from the preview sandbox origin.
+  allowedDevOrigins: ["*.space-z.ai"],
 };
 
 export default nextConfig;
